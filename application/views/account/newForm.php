@@ -43,7 +43,11 @@
 	<input type="text" name="first" value="" placeholder='First Name' class='input' required="">
 	<input type="text" name="last" value="" placeholder='Last Name' class='input' class='input' required="">
 	<input type="text" name="email" value="" placeholder='Email' class='input' required="">
-	<input type="submit" name="submit" class="loginbutton" value="Register">
+	
+   	<br/><?php echo img('account/securimage', TRUE)?><br/>
+   	<input type="text" name="imagecode" class='input' />	
+	
+	<input type="submit" name="submit" class="loginbutton" value="Register" required="">
 </form>
 
 <?php 

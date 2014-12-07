@@ -5,6 +5,9 @@ class Account extends CI_Controller {
     function __construct() {
     		// Call the Controller constructor
 	    	parent::__construct();
+			$this->load->library('securimage');
+			$this->load->helper('html');
+			$this->load->helper('url');
 	    	session_start();
     }
         
@@ -65,8 +68,13 @@ class Account extends CI_Controller {
     		redirect('account/index', 'refresh'); //Then we redirect to the index page again
     }
 
+
+    function securimage(){
+        $this->securimage->show();    	
+    }
+
     function newForm() {
-	    	$this->load->view('account/newForm');
+	    $this->load->view('account/newForm');
     }
     
     function createNew() {
@@ -77,8 +85,16 @@ class Account extends CI_Controller {
 	    	$this->form_validation->set_rules('last', 'last', "required");
 	    	$this->form_validation->set_rules('email', 'Email', "required|is_unique[user.email]");
 	    	
-	    
-	    	if ($this->form_validation->run() == FALSE)
+	        $inputCode = $this->input->post('imagecode');
+
+	        $captcha = false;
+	        if($this->securimage->check($inputCode) == true){
+	        	$captcha = true;
+	        } else {
+	        	$captcha = false;
+	        }
+
+	    	if (($this->form_validation->run() == FALSE) || ($captcha == false))
 	    	{
 	    		$this->load->view('account/newForm');
 	    	}

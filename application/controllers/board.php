@@ -48,11 +48,19 @@ class Board extends CI_Controller {
 	    	// In the match table
 	    	// user1 is always the other player
 	    	// user2 is always the host player
-	    	if ($match->user2_id == $userId){
+
+	    	echo print_r($match);
+
+	    	if (!isset($match)){
 	    		$data['playerType'] = "inviter";
 	    	}
 	    	else{
-	    		$data['playerType'] = "invitee";
+		    	if ($match->user2_id == $userId){
+		    		$data['playerType'] = "inviter";
+		    	}
+		    	else{
+		    		$data['playerType'] = "invitee";
+		    	}
 	    	}
 
 	    	$data['otherUser']=$otherUser;
