@@ -110,6 +110,77 @@
 			}
 		}
 
+		// Find first open position in a single column
+		function firstOpenColumn(one_d){
+			var two_d = index_1D_to_2D(one_d);
+			var col = two_d[0];
+			for (var i = 6; i >= 0; i--){
+				// check if the column has an open spot, if so return position
+				var pos = index_2D_to_1D(col, i);
+
+				if (gameState[pos] == 0){
+					// first open spot
+					return pos;
+				}
+			}
+			return -1;
+		}
+
+		$(document).on('mouseenter','.connection', function(){
+			
+			if (isMyTurn()){
+				var pos = $(this).attr('pos');
+				var to_drop = firstOpenColumn(pos);
+				$(".connection[pos='" + to_drop + "']").addClass("connection_available");				
+			}
+
+		}).on('mouseleave','.connection',function(){
+			$(".connection").removeClass("connection_available");
+		}).on('click','.connection', function(){
+			var pos = $(this).attr('pos');
+			var to_drop = firstOpenColumn(pos);		
+
+			var droppedElement =	$(".connection[pos='" + to_drop + "']").addClass("connection_available");	
+			droppedElement.addClass(playerType);
+
+			to_drop = parseFloat(droppedElement.attr('pos'));
+			gameState[to_drop] = playerTypeToState(playerType);
+			switchGameState();	
+
+
+			var untakenConnections = $(".connection").not(".invitee").not(".inviter").length;
+
+	    	if (isWinnerAt(to_drop)){
+	    		// Your last move made you the winner!
+
+	    		// Match playerType from match table to 
+	    		// a valid `match_status` state	    
+	    		gameState[43] = matchStatusPlayer();
+	    		updateStatus("You've beat <?= $otherUser->login ?>!", "win");		    		
+	    	}
+	    	else if (untakenConnections == 0){
+	    		// Nobody won, but the last move created a tie!
+	    		updateStatus("The game is a tie!", "tie");
+	    		gameState[43] = 4;
+	    	}		
+	    	
+
+			$.post('<?= base_url() ?>board/postBoardState',
+			    {'board_state': gameState}, 
+			    function(data){
+			    	//toggleTurn();
+
+			    	if (gameState[43] != 1){
+			    		stopGame();
+			    	}
+
+			    }
+			);	    		
+
+
+		});
+
+
 		// Check if the last move created a winner:
 
 		// Since we are storing our game state in a array of size 42 

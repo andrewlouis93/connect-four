@@ -255,6 +255,11 @@ height: 87px;
 background: rgba(0, 0, 0, 0.13);
 text-align: center;
 border-radius: 209px;
+cursor:pointer;
+}
+
+.connection_available{
+	box-shadow:0px 0px 15px blue;
 }
 
 #my_chip{
