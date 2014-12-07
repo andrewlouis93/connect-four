@@ -32,37 +32,23 @@ class Board extends CI_Controller {
 	    	$match = $this->match_model->get($user->match_id);
 	    	
 	    	if ($user->user_status_id == User::WAITING) {
+	    		$data['playerType'] = "inviter";	    		
 	    		$invite = $this->invite_model->get($user->invite_id);
 	    		$otherUser = $this->user_model->getFromId($invite->user2_id);	    	
 	    	}
 	    	else if ($user->user_status_id == User::PLAYING) {
+	    		$data['playerType'] = "invitee";	    		
 	    		if ($match->user1_id == $user->id)
 	    			$otherUser = $this->user_model->getFromId($match->user2_id);
 	    		else
 	    			$otherUser = $this->user_model->getFromId($match->user1_id);
-	    	
 	    	}
 	    	
-	    	$data['user'] = $user;
-
 	    	// In the match table
 	    	// user1 is always the other player
 	    	// user2 is always the host player
 
-	    	if ($match == null){
-	    		$data['playerType'] = "inviter";
-	    	}
-	    	else{
-		    	if ($match->user2_id == $userId){
-		    		$data['playerType'] = "inviter";
-		    	}
-		    	else{
-		    		$data['playerType'] = "invitee";
-		    	}
-	    	}
-
-
-
+	    	$data['user'] = $user;
 	    	$data['otherUser']=$otherUser;
 	    	
 	    	switch($user->user_status_id) {

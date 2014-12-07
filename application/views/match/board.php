@@ -61,7 +61,6 @@
 
 		function stopGame(){
 			clearInterval(gameLoop);
-			$("#my_chip").remove();
 		}
 
 		// state => tie, lost, win
@@ -92,13 +91,6 @@
 			else if (gameState[42] == 2){
 				gameState[42] = 1;
 			}
-
-			// Create new chip, and hide it
-			var $div = $("<div>", {id: "my_chip"});
-			$div.css('display','none');
-			$div.addClass(playerType);
-			$("#status").after( $div );
-			$div.draggable();
 		}
 
 		function isMyTurn(){
@@ -177,7 +169,7 @@
 			    }
 			);	    		
 
-
+			$(".connection").removeClass("connection_available");
 		});
 
 
@@ -256,7 +248,6 @@
 		$(function(){
 			
 			$('body').css('zoom',$(window).width()/screen.width);			
-			$("#my_chip").addClass("<?= $playerType ?>");
 
 			gameLoop = setInterval(function(){
 
@@ -307,14 +298,12 @@
 
 						// Checks updated gameState and switches states.
 						if (isMyTurn() == false){
-							$("#my_chip").hide();
 
 							$("#status").text(function(){
 								return $(this).text().replace("Playing", "Waiting for");
 							});
 						}
 						else{
-							$("#my_chip").show();
 
 							$("#status").text(function(){
 								return $(this).text().replace("Waiting for", "Playing");
@@ -325,63 +314,6 @@
 
 			},2000);
 
-		
-			// Draggable and droppable things here
-
-			$("#my_chip").draggable();
-		    $( ".connection" ).droppable({
-		      drop: function( event, ui ) {
-		      	// window.evt = event;
-		      	// window.ui = ui;
-		       	var droppedElement = $(event.target);
-		       	// window.derp = droppedElement;
-		       	
-		       	//droppedElement.css('background',$("#my_chip").css('background'));
-				//droppedElement.css('opacity','0.5');
-
-				droppedElement.addClass(playerType);
-
-		       	$("#my_chip").remove();
-				
-				var pos = parseFloat(droppedElement.attr('pos'));
-				gameState[pos] = playerTypeToState(playerType);
-				switchGameState();	
-
-				var untakenConnections = $(".connection").not(".invitee").not(".inviter").length;
-
-		    	if (isWinnerAt(pos)){
-		    		// Your last move made you the winner!
-
-		    		// Match playerType from match table to 
-		    		// a valid `match_status` state	    
-		    		gameState[43] = matchStatusPlayer();
-		    		updateStatus("You've beat <?= $otherUser->login ?>!", "win");		    		
-		    	}
-		    	else if (untakenConnections == 0){
-		    		// Nobody won, but the last move created a tie!
-		    		updateStatus("The game is a tie!", "tie");
-		    		gameState[43] = 4;
-		    	}
-		    	// else if(){
-		    	// 	// Check for tie here, change gameStatus to tie if this is the case.
-		    	// 	//gameState[]
-		    	// }
-
-				$.post('<?= base_url() ?>board/postBoardState',
-				    {'board_state': gameState}, 
-				    function(data){
-				    	//toggleTurn();
-
-				    	if (gameState[43] != 1){
-				    		stopGame();
-				    	}
-
-				    }
-				);
-
-
-		      }
-		    });
 		});
 	
 	</script>
