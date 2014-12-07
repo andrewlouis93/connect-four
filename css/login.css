@@ -32,12 +32,16 @@ a{
 }
 
 #newform{
-	margin-top:90px;
+	margin-top:20px;
   margin-left:auto;
   margin-right:auto;
 	width:322px;
 }
 	
+#newform img{
+	width:100%;
+}
+
 .input{
 	width:270px;
     padding:15px 25px;
