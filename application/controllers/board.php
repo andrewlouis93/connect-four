@@ -17,7 +17,7 @@ class Board extends CI_Controller {
 	    	return call_user_func_array(array($this, $method), $params);
     }
     
-    
+    //commences the match between players, invoked once an invite is accepted    
     function index() {
 			$user = $_SESSION['user'];
 
@@ -63,7 +63,8 @@ class Board extends CI_Controller {
 		$data['header'] = $this->load->view('partials/header.php', $data, true);	    	
 		$this->load->view('match/board',$data);
     }
-
+    
+    //Posts a message specified by one the game participants
  	function postMsg() {
  		$this->load->library('form_validation');
  		$this->form_validation->set_rules('msg', 'Message', 'required');
@@ -103,7 +104,8 @@ class Board extends CI_Controller {
 		error:
 			echo json_encode(array('status'=>'failure','message'=>$errormsg));
  	}
-
+    
+    //updates the board state in a game
  	function postBoardState() {
  		
  			$this->load->model('user_model');
@@ -131,7 +133,7 @@ class Board extends CI_Controller {
  			 
  			return;
  	} 	
-
+        //retrieves the state of the board
  	 	function getBoardState() {
  		
  			$this->load->model('user_model');
@@ -159,7 +161,7 @@ class Board extends CI_Controller {
  			return;
  	} 	
 
- 
+    //retrieves a message from the other game participant
 	function getMsg() {
  		$this->load->model('user_model');
  		$this->load->model('match_model');
