@@ -1,5 +1,5 @@
 <div class="nav-bar">
-	<a href='http://localhost:8888/connect4/arcade/index'>
+	<a href='http://localhost/Connect4/arcade/index'>
 		<h1 id="title" class="nav-bar-menu-item">
 			Connect<span>4</span>
 		</h1>
